@@ -77,3 +77,23 @@ def BFS(orig, dest):
 
 print(BFS('Culiacan','Cozumel'))
 
+def BFS2(graph, dest):
+  orig = orig = next(iter(graph.nodes())) 
+  if orig == dest:
+      return dest
+
+  frontier = [orig]
+  reached = [orig]
+
+  while frontier:
+    node = frontier.pop(0)
+    for child in graph.neighbors(node):
+      if child not in reached:
+        reached.append(child)
+        if child == dest:
+          return dest
+        frontier.append(child)
+  return None
+
+print(BFS2(G,'Cozumel'))
+
