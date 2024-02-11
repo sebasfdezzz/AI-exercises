@@ -17,7 +17,8 @@ impl Graph {
     }
 
     fn add_edge(mut self, node1: &str, node2: &str) -> Graph {
-        if !self.edges.iter().any(|&(n1, n2)| (n1 == node1 && n2 == node2) || (n1 == node2 && n2 == node1)) {
+        // Use tuple destructuring without references to avoid moving out of a shared reference
+        if !self.edges.iter().any(|(n1, n2)| (n1 == node1 && n2 == node2) || (n1 == node2 && n2 == node1)) {
             self.edges.push((node1.to_string(), node2.to_string()));
         }
         self
@@ -32,7 +33,7 @@ impl Graph {
     }
 }
 
-fn bfs_path(graph: &Graph, orig: &str, dest: &str) -> Result<Vec<&str>, String> {
+fn bfs_path<'a>(graph: &'a Graph, orig: &'a str, dest: &'a str) -> Result<Vec<&'a str>, String> {
     if orig == dest {
         return Ok(vec![orig]);
     }
@@ -47,21 +48,21 @@ fn bfs_path(graph: &Graph, orig: &str, dest: &str) -> Result<Vec<&str>, String> 
 
     while let Some(node) = frontier.pop() {
         for child in graph.neighbors(node) {
-            if !reached.contains(child) {
-                reached.push(child);
+            if !reached.contains(&&child[..]) {
+                reached.push(&child[..]);
                 parents.insert(child, node);
 
                 if child == &dest {
+                    path.push(&child[..]);
                     let mut parent = Some(node);
                     while let Some(p) = parent {
                         path.push(p);
                         parent = parents.get(p).copied();
                     }
-                    path.push(dest);
                     path.reverse();
                     return Ok(path);
                 }
-                frontier.push(child);
+                frontier.push(&child[..]);
             }
         }
     }
