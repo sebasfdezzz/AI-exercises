@@ -75,7 +75,7 @@ def BFS(orig, dest):
         frontier.append(child)
   return None
 
-print(BFS('Culiacan','Cozumel'))
+#print(BFS('Culiacan','Cozumel'))
 
 def BFS2(graph, dest):
   orig = orig = next(iter(graph.nodes())) 
@@ -95,7 +95,7 @@ def BFS2(graph, dest):
         frontier.append(child)
   return None
 
-print(BFS2(G,'Cozumel'))
+#print(BFS2(G,'Cozumel'))
 
 org = input("Origen: ")
 destino = input("Destino: ")
