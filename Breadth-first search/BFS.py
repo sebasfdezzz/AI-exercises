@@ -97,3 +97,38 @@ def BFS2(graph, dest):
 
 print(BFS2(G,'Cozumel'))
 
+org = input("Origen: ")
+destino = input("Destino: ")
+
+def BFSpath(orig, dest):
+  path = []
+  parents={}
+
+  G_low = nx.relabel_nodes(G, lambda x: x.lower())
+  orig = orig.lower()
+  dest = dest.lower()
+
+  if orig == dest:
+      return [dest.title()]
+
+  frontier = [orig]
+  reached = [orig]
+
+  while frontier:
+    node = frontier.pop(0)
+    for child in G_low.neighbors(node):
+      if child not in reached:
+        reached.append(child)
+        if child not in parents:
+          parents[child] = node
+        if child == dest:
+          path.append(child.title())
+          parent = node
+          while parent:
+            path.append(parent.title())
+            parent = parents.get(parent,None)
+          return path[::-1]
+        frontier.append(child)
+  return None
+
+print(BFSpath(org,destino))
