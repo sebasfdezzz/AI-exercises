@@ -129,6 +129,13 @@ def BFSpath(orig, dest):
             parent = parents.get(parent,None)
           return path[::-1]
         frontier.append(child)
-  return None
+  return "Camino o nodos inexistentes"
+  
+camino = "Camino o nodos inexistentes"
+try:
+  camino = BFSpath(org,destino)
+except:
+  camino = "Camino o nodos inexistentes"
 
-print(BFSpath(org,destino))
+print(camino)
+
