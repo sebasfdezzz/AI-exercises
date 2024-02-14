@@ -61,9 +61,9 @@ fn dijkstra<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<&'a str, u3
     //let mut to_check_queue: Vec<String> = graph.nodes().into_iter().map(|s| s.to_string()).collect();
 
     let mut to_check_queue: Vec<String> = vec![source.to_string()];
-
-    to_check_queue.extend(graph.nodes().into_iter().filter(|s| s.as_str() != source).map(|s| s.to_string()).collect());
-
+    to_check_queue.extend(graph.nodes().into_iter().filter(|s| s.as_str() != source).map(|s| s.to_string()));
+    to_check_queue.reverse();
+    
     while let Some(node) = to_check_queue.pop() {
         for child in graph.neighbors(&node[..]) {
             println!("{}",child);
