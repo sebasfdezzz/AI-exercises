@@ -56,7 +56,7 @@ impl Graph {
     }
 }
 
-fn dijkstra(G, source){
+fn dijkstra<'a>(graph: &'a Graph, source: &'a str) -> Result<Vec<(&'a str, u32)>, String> {
     
 }
 
@@ -71,16 +71,32 @@ fn main(){
     .add_node("g")
     .add_node("h")
     .add_node("i")
-    .add_node("j");
+    .add_node("j")
+    .add_weighted_edge("a".to_string(), "b".to_string(), 5)
+    .add_weighted_edge("a".to_string(), "c".to_string(), 8)
+    .add_weighted_edge("b".to_string(), "d".to_string(), 10)
+    .add_weighted_edge("b".to_string(), "e".to_string(), 15)
+    .add_weighted_edge("c".to_string(), "f".to_string(), 12)
+    .add_weighted_edge("c".to_string(), "g".to_string(), 7)
+    .add_weighted_edge("d".to_string(), "h".to_string(), 4)
+    .add_weighted_edge("e".to_string(), "i".to_string(), 9)
+    .add_weighted_edge("f".to_string(), "j".to_string(), 6)
+    .add_weighted_edge("g".to_string(), "j".to_string(), 3)
+    .add_weighted_edge("c".to_string(), "d".to_string(), 8)
+    .add_weighted_edge("i".to_string(), "e".to_string(), 5)
+    .add_weighted_edge("h".to_string(), "f".to_string(), 2)
+    .add_weighted_edge("c".to_string(), "g".to_string(), 1)
+    .add_weighted_edge("d".to_string(), "h".to_string(), 6)
+    .add_weighted_edge("e".to_string(), "i".to_string(), 5)
+    .add_weighted_edge("a".to_string(), "j".to_string(), 7);
 
-
-    for _ in 0..10 {
-        let nodes = graph.nodes();
-        let node1 = nodes[rand::random::<usize>() % 10];
-        let node2 = nodes[rand::random::<usize>() % 10];
-        let weight = rand::random::<u32>() % 20 + 1;
-        graph.add_weighted_edge(node1.to_string(), node2.to_string(), weight);
-    }
+    // for _ in 0..10 {
+    //     let nodes = graph.nodes();
+    //     let node1 = nodes[rand::random::<usize>() % 10];
+    //     let node2 = nodes[rand::random::<usize>() % 10];
+    //     let weight = rand::random::<u32>() % 20 + 1;
+    //     graph.add_weighted_edge(node1.to_string(), node2.to_string(), weight);
+    // }
 
     match bfs_path(&graph, "a", "e") {
         Ok(path) => println!("{:?}", path),
