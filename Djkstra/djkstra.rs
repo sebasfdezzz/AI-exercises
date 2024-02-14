@@ -60,7 +60,7 @@ fn dijkstra<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<&'a str, u3
 
     let mut to_check_queue: Vec<String> = graph.nodes().into_iter().map(|s| s.to_string()).collect();
 
-    while let Some(&node[..]) = to_check_queue.pop() {
+    while let Some(node) = to_check_queue.pop() {
         for child in graph.neighbors(&node[..]) {
             let dist = match dict_distances.get(&child[..]) {
                 Some(curr_dist) => {
