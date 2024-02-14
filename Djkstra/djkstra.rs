@@ -58,8 +58,6 @@ fn dijkstra<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<&'a str, u3
     let mut dict_distances: HashMap<&str, u32> = HashMap::new();
     dict_distances.insert(source, 0);
 
-    //let mut to_check_queue: Vec<String> = graph.nodes().into_iter().map(|s| s.to_string()).collect();
-
     let mut to_check_queue: Vec<String> = vec![source.to_string()];
     to_check_queue.extend(graph.nodes().into_iter().filter(|s| s.as_str() != source).map(|s| s.to_string()));
     to_check_queue.reverse();
