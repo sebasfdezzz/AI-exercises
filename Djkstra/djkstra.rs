@@ -3,7 +3,7 @@ use std::collections::HashMap;
 struct Graph {
     nodes: Vec<String>,
     edges: Vec<(String, String)>,
-    weights: HashMap<(&str, &str),u32>,
+    weights: HashMap<(String, String),u32>,
 }
 
 impl Graph {
@@ -91,23 +91,23 @@ fn main(){
     .add_node("h")
     .add_node("i")
     .add_node("j")
-    .add_w_edge("a".to_string(), "b".to_string(), 5)
-    .add_w_edge("a".to_string(), "c".to_string(), 8)
-    .add_w_edge("b".to_string(), "d".to_string(), 10)
-    .add_w_edge("b".to_string(), "e".to_string(), 15)
-    .add_w_edge("c".to_string(), "f".to_string(), 12)
-    .add_w_edge("c".to_string(), "g".to_string(), 7)
-    .add_w_edge("d".to_string(), "h".to_string(), 4)
-    .add_w_edge("e".to_string(), "i".to_string(), 9)
-    .add_w_edge("f".to_string(), "j".to_string(), 6)
-    .add_w_edge("g".to_string(), "j".to_string(), 3)
-    .add_w_edge("c".to_string(), "d".to_string(), 8)
-    .add_w_edge("i".to_string(), "e".to_string(), 5)
-    .add_w_edge("h".to_string(), "f".to_string(), 2)
-    .add_w_edge("c".to_string(), "g".to_string(), 1)
-    .add_w_edge("d".to_string(), "h".to_string(), 6)
-    .add_w_edge("e".to_string(), "i".to_string(), 5)
-    .add_w_edge("a".to_string(), "j".to_string(), 7);
+    .add_w_edge("a", "b", 5)
+    .add_w_edge("a", "c", 8)
+    .add_w_edge("b", "d", 10)
+    .add_w_edge("b", "e", 15)
+    .add_w_edge("c", "f", 12)
+    .add_w_edge("c", "g", 7)
+    .add_w_edge("d", "h", 4)
+    .add_w_edge("e", "i", 9)
+    .add_w_edge("f", "j", 6)
+    .add_w_edge("g", "j", 3)
+    .add_w_edge("c", "d", 8)
+    .add_w_edge("i", "e", 5)
+    .add_w_edge("h", "f", 2)
+    .add_w_edge("c", "g", 1)
+    .add_w_edge("d", "h", 6)
+    .add_w_edge("e", "i", 5)
+    .add_w_edge("a", "j", 7);
 
     // for _ in 0..10 {
     //     let nodes = graph.nodes();
