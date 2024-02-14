@@ -62,6 +62,7 @@ fn dijkstra<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<&'a str, u3
 
     while let Some(node) = to_check_queue.pop() {
         for child in graph.neighbors(&node[..]) {
+            println!(child);
             let dist = match dict_distances.get(&child[..]) {
                 Some(curr_dist) => {
                     if dict_distances[&node[..]] + graph.edge_from(&node[..], &child[..]).unwrap_or(&u32::MAX) < *curr_dist {
