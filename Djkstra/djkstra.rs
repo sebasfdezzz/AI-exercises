@@ -63,10 +63,12 @@ fn dijkstra<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<&'a str, u3
     let mut to_check_queue: Vec<String> = vec![source.to_string()];
     to_check_queue.extend(graph.nodes().into_iter().filter(|s| s.as_str() != source).map(|s| s.to_string()));
     to_check_queue.reverse();
-    
+
     while let Some(node) = to_check_queue.pop() {
         for child in graph.neighbors(&node[..]) {
-            println!("{}",child);
+            if !to_check_queue.contains(child){
+                continue;
+            } 
             let dist = match dict_distances.get(&child[..]) {
                 Some(curr_dist) => {
                     if dict_distances[&node[..]] + graph.edge_from(&node[..], &child[..]).unwrap_or(&u32::MAX) < *curr_dist {
@@ -85,7 +87,6 @@ fn dijkstra<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<&'a str, u3
 
 
 fn main(){
-    println!("Main initiated");
     let graph = Graph::new()
     .add_node("a")
     .add_node("b")
@@ -115,17 +116,9 @@ fn main(){
     .add_w_edge("e", "i", 5)
     .add_w_edge("a", "j", 7);
 
-    // for _ in 0..10 {
-    //     let nodes = graph.nodes();
-    //     let node1 = nodes[rand::random::<usize>() % 10];
-    //     let node2 = nodes[rand::random::<usize>() % 10];
-    //     let weight = rand::random::<u32>() % 20 + 1;
-    //     graph.add_w_edge(node1.to_string(), node2.to_string(), weight);
-    // }
-    println!("edges added");
     match dijkstra(&graph, "a") {
         Ok(distance_map) => println!("{:?}", distance_map),
         Err(msg) => println!("{}", msg),
     }
-    println!("Done!");
+
 }
