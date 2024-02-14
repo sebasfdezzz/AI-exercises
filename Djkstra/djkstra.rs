@@ -58,7 +58,7 @@ fn dijkstra<'a>(graph: &'a Graph, source: &'a str) -> Result<Vec<(&'a str, u32)>
     let mut dict_distances: HashMap<&str,u32> = HashMap::new();
     dict_distances.insert(source,0);
 
-    let mut to_check_queue: Vec<&str> = graph.nodes().iter().map(|&x| x).collect();
+    let mut to_check_queue: Vec<&str> = graph.nodes().iter()map.(|&x| x).collect();
 
     while let Some(node) = to_check_queue.pop(){
         if !to_check_queue.contains(node) continue;
