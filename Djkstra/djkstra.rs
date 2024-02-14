@@ -85,7 +85,6 @@ fn dijkstra<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<&'a str, u3
     Ok(dict_distances)
 }
 
-
 fn main(){
     let graph = Graph::new()
     .add_node("a")
