@@ -122,4 +122,5 @@ fn main(){
         Ok(distance_map) => println!("{:?}", distance_map),
         Err(msg) => println!("{}", msg),
     }
+    println!("Done");
 }
