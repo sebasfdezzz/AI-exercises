@@ -49,8 +49,8 @@ impl Graph {
         self.weights.get(&(from.to_string(), to.to_string()))
     }
 
-    fn nodes(&self) -> &Vec<String> {
-        &self.nodes
+    fn nodes(&self) -> &Vec<&str> {
+        &self.nodes.iter().map(|&x| x).collect()
     }
 }
 
