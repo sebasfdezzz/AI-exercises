@@ -98,8 +98,8 @@ fn main(){
     //     graph.add_weighted_edge(node1.to_string(), node2.to_string(), weight);
     // }
 
-    match bfs_path(&graph, "a", "e") {
-        Ok(path) => println!("{:?}", path),
+    match dijkstra(&graph, "a") {
+        Ok(distance_map) => println!("{:?}", distance_map),
         Err(msg) => println!("{}", msg),
     }
 }
