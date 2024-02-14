@@ -50,7 +50,7 @@ impl Graph {
     }
 
     fn nodes(&self) -> &Vec<&str> {
-        &self.nodes.iter().map(|&x| x).collect()
+        &self.nodes.iter().map(|x| x.as_str()).collect()
     }
 }
 
