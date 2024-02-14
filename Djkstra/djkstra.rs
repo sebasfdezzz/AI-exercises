@@ -21,13 +21,13 @@ impl Graph {
         self
     }
 
-    fn add_edge(mut self, node1: &str, node2: &str) -> Graph {
-        if !self.edges.iter().any(|(n1, n2)| (n1 == node1 && n2 == node2) || (n1 == node2 && n2 == node1)) {
-            self.edges.push((node1.to_string(), node2.to_string()));
-            self.weights.insert((node1.to_string(), node2.to_string()),1);
-        }
-        self
-    }
+    // fn add_edge(mut self, node1: &str, node2: &str) -> Graph {
+    //     if !self.edges.iter().any(|(n1, n2)| (n1 == node1 && n2 == node2) || (n1 == node2 && n2 == node1)) {
+    //         self.edges.push((node1.to_string(), node2.to_string()));
+    //         self.weights.insert((node1.to_string(), node2.to_string()),1);
+    //     }
+    //     self
+    // }
 
     fn add_w_edge(mut self, node1: &str, node2: &str, w: u32) -> Graph {
         if !self.edges.iter().any(|(n1, n2)| (n1 == node1 && n2 == node2) || (n1 == node2 && n2 == node1)) {
@@ -80,6 +80,7 @@ fn dijkstra<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<&'a str, u3
 
 
 fn main(){
+    println!("Main initiated");
     let graph = Graph::new()
     .add_node("a")
     .add_node("b")
@@ -116,7 +117,7 @@ fn main(){
     //     let weight = rand::random::<u32>() % 20 + 1;
     //     graph.add_w_edge(node1.to_string(), node2.to_string(), weight);
     // }
-
+    println!("edges added");
     match dijkstra(&graph, "a") {
         Ok(distance_map) => println!("{:?}", distance_map),
         Err(msg) => println!("{}", msg),
