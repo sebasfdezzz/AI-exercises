@@ -54,20 +54,30 @@ impl Graph {
     }
 }
 
-fn dijkstra<'a>(graph: &'a Graph, source: &'a str) -> Result<Vec<(&'a str, u32)>, String> {
-    let mut dict_distances: HashMap<&str,u32> = HashMap::new();
-    dict_distances.insert(source,0);
+fn dijkstra<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<&'a str, u32>, String> {
+    let mut dict_distances: HashMap<&str, u32> = HashMap::new();
+    dict_distances.insert(source, 0);
 
-    let mut to_check_queue: Vec<&str> = graph.nodes().iter()map.(|&x| x).collect();
+    let mut to_check_queue: Vec<&str> = graph.nodes().iter().map(|&x| x).collect();
 
-    while let Some(node) = to_check_queue.pop(){
-        if !to_check_queue.contains(node) continue;
-        for child in graph.neighbors(node){
-
+    while let Some(node) = to_check_queue.pop() {
+        for child in graph.neighbors(node) {
+            let dist = match dict_distances.get(child) {
+                Some(curr_dist) => {
+                    if dict_distances[node] + graph.edge_from(node, child)? < *curr_dist {
+                        dict_distances[node] + graph.edge_from(node, child)?
+                    } else {
+                        *curr_dist
+                    }
+                }
+                None => dict_distances[node] + graph.edge_from(node, child).unwrap_or(&u32::MAX),
+            };
+            dict_distances.insert(child, dist);
         }
     }
-    
+    Ok(dict_distances)
 }
+
 
 fn main(){
     let graph = Graph::new()
