@@ -22,7 +22,6 @@ impl Graph {
     }
 
     fn add_edge(mut self, node1: &str, node2: &str) -> Graph {
-        // Use tuple destructuring without references to avoid moving out of a shared reference
         if !self.edges.iter().any(|(n1, n2)| (n1 == node1 && n2 == node2) || (n1 == node2 && n2 == node1)) {
             self.edges.push((node1.to_string(), node2.to_string()));
             self.weights.insert((node1.to_string(), node2.to_string()),1);
@@ -31,7 +30,6 @@ impl Graph {
     }
 
     fn add_w_edge(mut self, node1: &str, node2: &str, w: u32) -> Graph {
-        // Use tuple destructuring without references to avoid moving out of a shared reference
         if !self.edges.iter().any(|(n1, n2)| (n1 == node1 && n2 == node2) || (n1 == node2 && n2 == node1)) {
             self.edges.push((node1.to_string(), node2.to_string()));
             self.weights.insert((node1.to_string(), node2.to_string()),w);
@@ -60,7 +58,14 @@ fn dijkstra<'a>(graph: &'a Graph, source: &'a str) -> Result<Vec<(&'a str, u32)>
     let mut dict_distances: HashMap<&str,u32> = HashMap::new();
     dict_distances.insert(source,0);
 
-    let mut to_check_queue: Vec<&str> = vec![graph.nodes().iter().map(|x| &x).collect()];
+    let mut to_check_queue: Vec<&str> = graph.nodes().iter().map(|&x| x).collect();
+
+    while let Some(node) = to_check_queue.pop(){
+        if !to_check_queue.contains(node) continue;
+        for child in graph.neighbors(node){
+
+        }
+    }
     
 }
 
