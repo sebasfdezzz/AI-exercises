@@ -83,6 +83,14 @@ fn dijkstra<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<&'a str, u3
     Ok(dict_distances)
 }
 
+fn min_pop(q: Vec<String>, dict: &HashMap<&str,u32>) -> String{
+    let mut min_value: i32 = -1;
+    let mut min_node: i32 = -1;
+    for node in q.iter(){
+        if d
+    } 
+}
+
 fn main(){
     let graph = Graph::new()
     .add_node("a")
