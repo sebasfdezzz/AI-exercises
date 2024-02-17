@@ -109,6 +109,7 @@ def DFS_limited_rnd(node, dest, limit, depth=0, visited=None):
 
     if depth >= limit:
         return None
+    
     children = [child for child in G.neighbors(node) if child not in visited]
     if children:
             child = random.choice(children)
