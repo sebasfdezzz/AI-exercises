@@ -68,11 +68,11 @@ def DFS_limited(node, dest, limit, depth=0, visited=None):
         return [node]
 
     if depth >= limit:
-        return None  # Depth limit exceeded
+        return None
 
-    if node in G:  # Check if node exists in the graph
+    if node in G: 
         for child in G[node]:
-            weight = G[node][child]['weight']  # Access weight of the edge
+            weight = G[node][child]['weight'] 
             if child not in visited and weight <= limit - depth:
                 path = DFS_limited(child, dest, limit, depth + weight, visited)
                 if path:
