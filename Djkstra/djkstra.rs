@@ -62,7 +62,7 @@ fn dijkstra<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<&'a str, u3
     to_check_queue.extend(graph.nodes().into_iter().filter(|s| s.as_str() != source).map(|s| s.to_string()));
     to_check_queue.reverse();
 
-    while let Some(node) = to_check_queue.pop() {
+    while let Some(node) = min_pop(&mut to_check_queue,&dict_distances) {
         for child in graph.neighbors(&node[..]) {
             if !to_check_queue.contains(child){
                 continue;
@@ -83,21 +83,32 @@ fn dijkstra<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<&'a str, u3
     Ok(dict_distances)
 }
 
-fn min_pop(mut q: Vec<String>, dict: &HashMap<&str, u32>) -> String {
+fn min_pop(q: &mut Vec<String>, dict: &HashMap<&str, u32>) -> Option<String> {
+    if q.is_empty() {
+        return None;
+    }
+    
     let mut min_value = u32::MAX;
     let mut min_node = String::new();
-    for node in &q {
-        if let Some(&temp_dist) = dict.get(&node[..]) {
+    
+    for node in &*q {
+        if let Some(&temp_dist) = dict.get(node.as_str()) {
             if temp_dist < min_value {
                 min_value = temp_dist;
                 min_node = node.clone();
             }
         }
     }
-    let index = q.iter().position(|x| x == &min_node).unwrap();
-    q.remove(index);
-    min_node
+    
+    if let Some(index) = q.iter().position(|x| x == &min_node) {
+        q.remove(index);
+        Some(min_node)
+    } else {
+        None
+    }
 }
+
+
 
 fn main(){
     let graph = Graph::new()
