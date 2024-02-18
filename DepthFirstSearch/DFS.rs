@@ -55,8 +55,22 @@ impl Graph {
     }
 }
 
-fn dfs_path<'a>(graph: &'a Graph, orig: &'a str, dest: &'a str) -> Result<Vec<&'a str>, String> {
-    
+fn dfs_path<'a>(graph: &'a Graph, node: &'a str, dest: &'a str, visited: &mut Vec<&str>) -> Result<Vec<&'a str>, String> {
+
+    visited.push(node);
+
+    if node == dest{
+        return vec![node];
+    }
+
+    if !graph.neighbors(node).is_empty(){
+        for child in graph.neighbors(node){
+            if !visited.contains(child){
+                let path = dfs_path(graph, child, dest,visited);
+                
+            }
+        }
+    }
 }
 
 fn dfs_path_limited<'a>(graph: &'a Graph, orig: &'a str, dest: &'a str) -> Result<Vec<&'a str>, String> {
@@ -108,7 +122,7 @@ fn main() {
     .add_w_edge("e", "i", 5)
     .add_w_edge("a", "j", 7);
 
-    match dfs_path(&graph, "a", "e") {
+    match dfs_path(&graph, "a", "e", &mut Vec::new()) {
         Ok(path) => println!("{:?}", path),
         Err(msg) => println!("{}", msg),
     }
