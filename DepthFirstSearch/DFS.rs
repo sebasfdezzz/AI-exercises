@@ -66,11 +66,14 @@ fn dfs_path<'a>(graph: &'a Graph, node: &'a str, dest: &'a str, visited: &mut Ve
     if !graph.neighbors(node).is_empty(){
         for child in graph.neighbors(node){
             if !visited.contains(child){
-                let path = dfs_path(graph, child, dest,visited);
+                if let Some(path) = dfs_path(graph,child,dest,visited){
+                    Some(vec![node].extend(path))
+                }
                 
             }
         }
     }
+    None
 }
 
 fn dfs_path_limited<'a>(graph: &'a Graph, orig: &'a str, dest: &'a str) -> Result<Vec<&'a str>, String> {
