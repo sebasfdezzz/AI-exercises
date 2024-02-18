@@ -74,3 +74,52 @@ def djkstra(G, source):
   return dist, prev
 
 djkstra(G,'Cozumel')
+
+# RETURN PATH
+def min_value(q,dist):
+  temp =float('infinity')
+  min_val=None
+  for node in q:
+    if dist[node] < temp:
+      temp = dist[node]
+      min_val = node
+  return min_val
+
+def djkstra_paths(G, source):
+  queue = []
+  dist={}
+  prev={}
+  path={}
+
+  for node in G.nodes():
+    dist[node] = float('infinity')
+    prev[node] = None
+    path[node] = [0,[node]]
+    queue.append(node)
+
+  dist[source] = 0
+  path[source] = [0,[source]]
+
+  while queue:
+   u = min_value(queue,dist)
+   queue.remove(u)
+   for child in G.neighbors(u):
+    # if child not in queue:
+    #   continue
+    temp_dist = dist[u] + G.get_edge_data(u, child)['weight']
+    if temp_dist < dist[child]:
+      dist[child] = temp_dist
+      prev[child] = u
+
+  for node in G.nodes():
+    parent = prev[node]
+    while parent:
+      path[node][1].append(parent)
+      parent = prev[parent]
+    path[node][1] = path[node][1][::-1]
+    path[node][0] = dist[node]
+
+  #return dist, prev, path
+  return path
+
+djkstra_paths(G,'Cozumel')
