@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::time::SystemTime;
 
 struct Graph {
     nodes: Vec<String>,
@@ -68,6 +69,13 @@ fn dfs_path_rnd<'a>(graph: &'a Graph, orig: &'a str, dest: &'a str) -> Result<Ve
 
 fn dfs_path_limited_rnd<'a>(graph: &'a Graph, orig: &'a str, dest: &'a str) -> Result<Vec<&'a str>, String> {
     
+}
+
+fn random_index(max: usize) -> usize {
+    match SystemTime::now().duration_since(SystemTime::UNIX_EPOCH) {
+        Ok(duration) => duration.as_nanos() as usize % max,
+        Err(_) => panic!("SystemTime before UNIX EPOCH!"),
+    }
 }
 
 fn main() {
