@@ -55,37 +55,39 @@ impl Graph {
     }
 }
 
-fn dfs_path<'a>(graph: &'a Graph, node: &'a str, dest: &'a str, visited: &mut Vec<&str>) -> Result<Vec<&'a str>, String> {
+fn dfs_path<'a>(graph: &'a Graph, node: &'a str, dest: &'a str, visited: &mut Vec<&'a str>) -> Option<Vec<&'a str>> {
 
     visited.push(node);
 
-    if node == dest{
-        return vec![node];
+    if node == dest {
+        return Some(vec![node]);
     }
 
-    if !graph.neighbors(node).is_empty(){
-        for child in graph.neighbors(node){
-            if !visited.contains(child){
-                if let Some(path) = dfs_path(graph,child,dest,visited){
-                    Some(vec![node].extend(path))
+    if !graph.neighbors(node).is_empty() {
+        for child in graph.neighbors(node) {
+            if !visited.contains(&&child[..]) {
+                if let Some(mut path) = dfs_path(graph, child, dest, visited) {
+                    path.insert(0, node);
+                    return Some(path);
                 }
-                
             }
         }
     }
+    
     None
 }
 
+
 fn dfs_path_limited<'a>(graph: &'a Graph, orig: &'a str, dest: &'a str) -> Result<Vec<&'a str>, String> {
-    
+    Ok(vec!["ok"])
 }
 
 fn dfs_path_rnd<'a>(graph: &'a Graph, orig: &'a str, dest: &'a str) -> Result<Vec<&'a str>, String> {
-    
+    Ok(vec!["ok"])
 }
 
 fn dfs_path_limited_rnd<'a>(graph: &'a Graph, orig: &'a str, dest: &'a str) -> Result<Vec<&'a str>, String> {
-    
+    Ok(vec!["ok"])
 }
 
 fn random_index(max: usize) -> usize {
@@ -125,8 +127,12 @@ fn main() {
     .add_w_edge("e", "i", 5)
     .add_w_edge("a", "j", 7);
 
-    match dfs_path(&graph, "a", "e", &mut Vec::new()) {
-        Ok(path) => println!("{:?}", path),
-        Err(msg) => println!("{}", msg),
+    let mut visited = Vec::new();
+    match dfs_path(&graph, "a", "e", &mut visited) {
+        Some(path) => println!("{:?}", path),
+        None => println!("No path found."),
     }
 }
+
+
+
