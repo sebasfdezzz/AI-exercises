@@ -90,12 +90,15 @@ def DFS_rnd(node, dest, visited=None):
         return [node]
 
     children = [child for child in G.neighbors(node) if child not in visited]
-    if children:
+    while children:
         random_child = random.choice(children)
         path = DFS_rnd(random_child, dest, visited)
+        children.remove(random_child)
         if path:
             return [node] + path
     return None
+
+print(DFS_rnd('Cozumel','Acapulco'))
 
 
 def DFS_limited_rnd(node, dest, limit, depth=0, visited=None):
@@ -109,11 +112,11 @@ def DFS_limited_rnd(node, dest, limit, depth=0, visited=None):
 
     if depth >= limit:
         return None
-    
     children = [child for child in G.neighbors(node) if child not in visited]
-    if children:
+    while children:
             child = random.choice(children)
             weight = G[node][child]['weight']
+            children.remove(child)
             if child not in visited and weight <= limit - depth:
                 path = DFS_limited(child, dest, limit, depth + weight, visited)
                 if path:
