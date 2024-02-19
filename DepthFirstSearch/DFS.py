@@ -98,8 +98,6 @@ def DFS_rnd(node, dest, visited=None):
             return [node] + path
     return None
 
-print(DFS_rnd('Cozumel','Acapulco'))
-
 
 def DFS_limited_rnd(node, dest, limit, depth=0, visited=None):
     if visited is None:
