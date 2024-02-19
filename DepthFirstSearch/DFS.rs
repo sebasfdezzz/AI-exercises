@@ -106,21 +106,23 @@ fn dfs_path_limited<'a>(graph: &'a Graph, node: &'a str, dest: &'a str, depth: u
 }
 
 fn dfs_path_rnd<'a>(graph: &'a Graph, node: &'a str, dest: &'a str, visited: &mut Vec<&'a str>) -> Option<Vec<&'a str>> {
+    //println!("{}",node);
     visited.push(node);
 
     if node == dest {
         return Some(vec![node]);
     }
 
-    let children: Vec<&String> = graph.neighbors(node)
+    let mut children: Vec<&String> = graph.neighbors(node)
         .iter()
         .filter(|&child| !visited.contains(&&child[..]))
         .cloned()
         .collect();
 
-    if !children.is_empty() {
+    while !children.is_empty() {
         let rnd_index = random_index(children.len());
         let child = children[rnd_index];
+        children.retain(|&x| x != child);
         if let Some(mut path) = dfs_path_rnd(graph, child, dest, visited) {
             path.insert(0, node);
             return Some(path);
@@ -147,10 +149,11 @@ fn dfs_path_limited_rnd<'a>(graph: &'a Graph, node: &'a str, dest: &'a str, dept
         .cloned()
         .collect();
 
-    if !children.is_empty() {
+    while !children.is_empty() {
         let rnd_index = random_index(children.len());
         let child = children[rnd_index];
         let weight = *graph.edge_from(node,child).unwrap_or(&u32::MAX);
+        children.retain(|&x| x != child);
         if weight <= limit - depth{
             if let Some(mut path) = dfs_path_limited_rnd(graph, child, dest,depth+weight,limit, visited) {
                 path.insert(0, node);
