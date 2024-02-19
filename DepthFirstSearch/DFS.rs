@@ -143,7 +143,7 @@ fn dfs_path_limited_rnd<'a>(graph: &'a Graph, node: &'a str, dest: &'a str, dept
         return None;
     }
 
-    let children: Vec<&String> = graph.neighbors(node)
+    let mut children: Vec<&String> = graph.neighbors(node)
         .iter()
         .filter(|&child| !visited.contains(&&child[..]))
         .cloned()
@@ -186,6 +186,11 @@ fn main() {
     .add_node("h")
     .add_node("i")
     .add_node("j")
+    .add_node("k")
+    .add_node("l")
+    .add_node("m")
+    .add_node("o")
+    .add_node("p")
     .add_w_edge("a", "b", 5)
     .add_w_edge("a", "c", 8)
     .add_w_edge("b", "d", 10)
@@ -201,25 +206,67 @@ fn main() {
     .add_w_edge("h", "f", 2)
     .add_w_edge("c", "g", 1)
     .add_w_edge("d", "h", 6)
-    .add_w_edge("a", "j", 7);
+    .add_w_edge("a", "j", 7)
+    .add_w_edge("b", "h", 13)
+    .add_w_edge("c", "e", 11)
+    .add_w_edge("d", "g", 5)
+    .add_w_edge("e", "j", 14)
+    .add_w_edge("f", "i", 9)
+    .add_w_edge("g", "h", 3)
+    .add_w_edge("h", "j", 7)
+    .add_w_edge("i", "k", 10)
+    .add_w_edge("j", "l", 8)
+    .add_w_edge("k", "m", 6)
+    .add_w_edge("l", "o", 12)
+    .add_w_edge("m", "p", 15)
+    .add_w_edge("n", "o", 4)
+    .add_w_edge("o", "p", 7)
+    .add_w_edge("p", "a", 9)
+    .add_w_edge("a", "m", 11)
+    .add_w_edge("b", "o", 8)
+    .add_w_edge("c", "l", 6)
+    .add_w_edge("d", "k", 13)
+    .add_w_edge("e", "j", 10)
+    .add_w_edge("f", "i", 7)
+    .add_w_edge("g", "h", 4)
+    .add_w_edge("h", "g", 5)
+    .add_w_edge("i", "f", 8)
+    .add_w_edge("j", "e", 9)
+    .add_w_edge("k", "d", 12)
+    .add_w_edge("l", "c", 11)
+    .add_w_edge("m", "b", 14)
+    .add_w_edge("n", "a", 10)
+    .add_w_edge("o", "p", 13)
+    .add_w_edge("p", "n", 6)
+    .add_w_edge("a", "o", 15)
+    .add_w_edge("b", "n", 7)
+    .add_w_edge("c", "m", 8)
+    .add_w_edge("d", "l", 9)
+    .add_w_edge("e", "k", 10)
+    .add_w_edge("f", "j", 11)
+    .add_w_edge("g", "i", 12)
+    .add_w_edge("h", "h", 13)
+    .add_w_edge("i", "g", 14)
+    .add_w_edge("j", "f", 15);
+
 
     let mut visited = Vec::new();
-    match dfs_path(&graph, "a", "i", &mut visited) {
+    match dfs_path(&graph, "a", "p", &mut visited) {
         Some(path) => println!("{:?}", path),
         None => println!("No path found."),
     }
     let mut visited1 = Vec::new();
-    match dfs_path_rnd(&graph, "a", "i", &mut visited1) {
+    match dfs_path_rnd(&graph, "a", "p", &mut visited1) {
         Some(path) => println!("{:?}", path),
         None => println!("No path found."),
     }
     let mut visited2 = Vec::new();
-    match dfs_path_limited(&graph, "a", "i",0,90, &mut visited2) {
+    match dfs_path_limited(&graph, "a", "p",0,20, &mut visited2) {
         Some(path) => println!("{:?}", path),
         None => println!("No path found."),
     }
     let mut visited3 = Vec::new();
-    match dfs_path_limited_rnd(&graph, "a", "i",0,90, &mut visited3) {
+    match dfs_path_limited_rnd(&graph, "a", "p",0,50, &mut visited3) {
         Some(path) => println!("{:?}", path),
         None => println!("No path found."),
     }
