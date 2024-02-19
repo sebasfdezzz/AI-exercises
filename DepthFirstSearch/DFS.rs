@@ -46,8 +46,8 @@ impl Graph {
             .collect()
     }
 
-    fn edge_from(&self, from: &str, to: &str) -> Option<u32> {
-        self.weights.get((from.to_string(), to.to_string()))
+    fn edge_from(&self, from: &str, to: &str) -> Option<&u32> {
+        self.weights.get(&(from.to_string(), to.to_string()))
     }
 
     fn nodes(&self) -> Vec<String> {
@@ -92,7 +92,7 @@ fn dfs_path_limited<'a>(graph: &'a Graph, node: &'a str, dest: &'a str, depth: u
 
     if !graph.neighbors(node).is_empty() {
         for child in graph.neighbors(node) {
-            let weight = graph.edge_from(node,child);
+            let weight = *graph.edge_from(node,child).unwrap_or(&u32::MAX);
             if !visited.contains(&&child[..]) && weight <= limit - depth {
                 if let Some(mut path) = dfs_path_limited(graph, child, dest,depth+weight,limit, visited) {
                     path.insert(0, node);
@@ -114,13 +114,13 @@ fn dfs_path_rnd<'a>(graph: &'a Graph, node: &'a str, dest: &'a str, visited: &mu
 
     let children: Vec<&String> = graph.neighbors(node)
         .iter()
-        .filter(|&child| !visited.contains(child))
+        .filter(|&child| !visited.contains(&&child[..]))
         .cloned()
         .collect();
 
     if !children.is_empty() {
-        let rnd_index = random_index(children.len())
-        let child = children[rnd_index]
+        let rnd_index = random_index(children.len());
+        let child = children[rnd_index];
         if let Some(mut path) = dfs_path_rnd(graph, child, dest, visited) {
             path.insert(0, node);
             return Some(path);
@@ -143,14 +143,14 @@ fn dfs_path_limited_rnd<'a>(graph: &'a Graph, node: &'a str, dest: &'a str, dept
 
     let children: Vec<&String> = graph.neighbors(node)
         .iter()
-        .filter(|&child| !visited.contains(child))
+        .filter(|&child| !visited.contains(&&child[..]))
         .cloned()
         .collect();
 
     if !children.is_empty() {
         let rnd_index = random_index(children.len());
         let child = children[rnd_index];
-        let weight = graph.edge_from(node,child);
+        let weight = *graph.edge_from(node,child).unwrap_or(&u32::MAX);
         if weight <= limit - depth{
             if let Some(mut path) = dfs_path_limited_rnd(graph, child, dest,depth+weight,limit, visited) {
                 path.insert(0, node);
@@ -198,11 +198,25 @@ fn main() {
     .add_w_edge("h", "f", 2)
     .add_w_edge("c", "g", 1)
     .add_w_edge("d", "h", 6)
-    .add_w_edge("e", "i", 5)
     .add_w_edge("a", "j", 7);
 
     let mut visited = Vec::new();
-    match dfs_path(&graph, "a", "e", &mut visited) {
+    match dfs_path(&graph, "a", "i", &mut visited) {
+        Some(path) => println!("{:?}", path),
+        None => println!("No path found."),
+    }
+    let mut visited1 = Vec::new();
+    match dfs_path_rnd(&graph, "a", "i", &mut visited1) {
+        Some(path) => println!("{:?}", path),
+        None => println!("No path found."),
+    }
+    let mut visited2 = Vec::new();
+    match dfs_path_limited(&graph, "a", "i",0,90, &mut visited2) {
+        Some(path) => println!("{:?}", path),
+        None => println!("No path found."),
+    }
+    let mut visited3 = Vec::new();
+    match dfs_path_limited_rnd(&graph, "a", "i",0,90, &mut visited3) {
         Some(path) => println!("{:?}", path),
         None => println!("No path found."),
     }
