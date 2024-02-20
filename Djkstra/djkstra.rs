@@ -86,24 +86,26 @@ fn dijkstra<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<&'a str, u3
     Ok(dict_distances)
 }
 
-fn dijkstra_path<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<&'a str, Vec<&'a str>>, String> {
+fn dijkstra_path<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<String, Vec<String>>, String> {
     let mut dict_distances: HashMap<&str, u32> = HashMap::new();
-    let mut dict_prev: HashMap<&str, &str> = HashMap::new();
+    let mut dict_prev: HashMap<String, String> = HashMap::new();
 
     dict_distances.insert(source, 0);
 
     let mut to_check_queue: Vec<String> = vec![source.to_string()];
-    to_check_queue.extend(graph.nodes().into_iter().filter(|s| s.as_str() != source).map(|s| s.to_string()));
+    to_check_queue.extend(graph.nodes().iter().map(|s| s.to_string()));
     to_check_queue.reverse();
 
-    while let Some(node) = min_pop(&mut to_check_queue,&dict_distances) {
+    while let Some(node) = min_pop(&mut to_check_queue, &dict_distances) {
         for child in graph.neighbors(&node[..]) {
-            if !to_check_queue.contains(child){
+            if !to_check_queue.contains(child) {
                 continue;
-            } 
+            }
             let dist = match dict_distances.get(&child[..]) {
                 Some(curr_dist) => {
-                    if dict_distances[&node[..]] + graph.edge_from(&node[..], &child[..]).unwrap_or(&u32::MAX) < *curr_dist {
+                    if dict_distances[&node[..]] + graph.edge_from(&node[..], &child[..]).unwrap_or(&u32::MAX)
+                        < *curr_dist
+                    {
                         dict_distances[&node[..]] + graph.edge_from(&node[..], &child[..]).unwrap_or(&u32::MAX)
                     } else {
                         *curr_dist
@@ -112,29 +114,29 @@ fn dijkstra_path<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<&'a st
                 None => dict_distances[&node[..]] + graph.edge_from(&node[..], &child[..]).unwrap_or(&u32::MAX),
             };
             dict_distances.insert(&child[..], dist);
-            dict_prev.insert(&child[..],&node[..]);
+            dict_prev.insert(child.clone(), node.clone()); // Store owned strings
         }
     }
 
-    let mut dict_paths: HashMap<&str,Vec<&str>> = HashMap::new();
-    for node in graph.nodes().iter(){
-        let mut temp_vec: Vec<&str> = vec![&node[..]];
-        let mut curr_node = node.as_str();
-        while let Some(parent) = dict_prev.get(curr_node){
-            temp_vec.push(parent);
-            curr_node = parent;
-            
+    let mut dict_paths: HashMap<String, Vec<String>> = HashMap::new();
+    for node in graph.nodes().iter() {
+        let mut temp_vec: Vec<String> = vec![node.to_string()];
+
+        let mut current_node = node.as_str();
+        while let Some(parent) = dict_prev.get(current_node) {
+            temp_vec.push(parent.clone()); // Store owned strings
+            current_node = parent;
         }
 
         temp_vec.reverse();
-        
-        dict_paths.insert(node,temp_vec.clone());
-        
+
+        dict_paths.insert(node.to_string(), temp_vec);
     }
 
-    
-    Ok(dict_distances)
+    Ok(dict_paths)
 }
+
+
 
 fn min_pop(q: &mut Vec<String>, dict: &HashMap<&str, u32>) -> Option<String> {
     if q.is_empty() {
@@ -195,6 +197,11 @@ fn main(){
 
     match dijkstra(&graph, "a") {
         Ok(distance_map) => println!("{:?}", distance_map),
+        Err(msg) => println!("{}", msg),
+    }
+
+    match dijkstra_path(&graph, "a") {
+        Ok(path_map) => println!("{:?}", path_map),
         Err(msg) => println!("{}", msg),
     }
 
