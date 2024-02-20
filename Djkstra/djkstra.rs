@@ -119,14 +119,15 @@ fn dijkstra_path<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<&'a st
     let mut dict_paths: HashMap<&str,Vec<&str>> = HashMap::new();
     for node in graph.nodes().iter(){
         let mut temp_vec: Vec<&str> = vec![&node[..]];
-        if let mut parent: &str = dict_prev.get();
-        temp_vec.push(parent);
-        while parent{
+        let mut curr_node = node.as_str();
+        while let Some(parent) = dict_prev.get(curr_node){
+            temp_vec.push(parent);
+            curr_node = parent;
             
-            parent = dict_prev[parent]
         }
 
         temp_vec.reverse();
+        
         dict_paths.insert(node,temp_vec.clone());
         
     }
