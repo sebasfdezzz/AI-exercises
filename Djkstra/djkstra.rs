@@ -80,6 +80,58 @@ fn dijkstra<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<&'a str, u3
             dict_distances.insert(&child[..], dist);
         }
     }
+
+    
+
+    Ok(dict_distances)
+}
+
+fn dijkstra_path<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<&'a str, Vec<&'a str>>, String> {
+    let mut dict_distances: HashMap<&str, u32> = HashMap::new();
+    let mut dict_prev: HashMap<&str, &str> = HashMap::new();
+
+    dict_distances.insert(source, 0);
+
+    let mut to_check_queue: Vec<String> = vec![source.to_string()];
+    to_check_queue.extend(graph.nodes().into_iter().filter(|s| s.as_str() != source).map(|s| s.to_string()));
+    to_check_queue.reverse();
+
+    while let Some(node) = min_pop(&mut to_check_queue,&dict_distances) {
+        for child in graph.neighbors(&node[..]) {
+            if !to_check_queue.contains(child){
+                continue;
+            } 
+            let dist = match dict_distances.get(&child[..]) {
+                Some(curr_dist) => {
+                    if dict_distances[&node[..]] + graph.edge_from(&node[..], &child[..]).unwrap_or(&u32::MAX) < *curr_dist {
+                        dict_distances[&node[..]] + graph.edge_from(&node[..], &child[..]).unwrap_or(&u32::MAX)
+                    } else {
+                        *curr_dist
+                    }
+                }
+                None => dict_distances[&node[..]] + graph.edge_from(&node[..], &child[..]).unwrap_or(&u32::MAX),
+            };
+            dict_distances.insert(&child[..], dist);
+            dict_prev.insert(&child[..],&node[..]);
+        }
+    }
+
+    let mut dict_paths: HashMap<&str,Vec<&str>> = HashMap::new();
+    for node in graph.nodes().iter(){
+        let mut temp_vec: Vec<&str> = vec![&node[..]];
+        if let mut parent: &str = dict_prev.get();
+        temp_vec.push(parent);
+        while parent{
+            
+            parent = dict_prev[parent]
+        }
+
+        temp_vec.reverse();
+        dict_paths.insert(node,temp_vec.clone());
+        
+    }
+
+    
     Ok(dict_distances)
 }
 
