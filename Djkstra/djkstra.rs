@@ -114,7 +114,7 @@ fn dijkstra_path<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<String
                 None => dict_distances[&node[..]] + graph.edge_from(&node[..], &child[..]).unwrap_or(&u32::MAX),
             };
             dict_distances.insert(&child[..], dist);
-            dict_prev.insert(child.clone(), node.clone()); // Store owned strings
+            dict_prev.insert(child.clone(), node.clone());
         }
     }
 
