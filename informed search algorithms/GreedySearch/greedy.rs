@@ -1,18 +1,22 @@
 use std::collections::HashMap;
+use std::time::SystemTime;
 
 struct Graph {
+    nodes: Vec<String>,
     edges: Vec<(String, String)>,
 }
 
 impl Graph {
     fn new() -> Graph {
         Graph {
+            nodes: Vec::new(),
             edges: Vec::new(),
         }
     }
 
     fn add_node(mut self, node: &str) -> Graph {
         self.edges.push((node.to_string(), node.to_string()));
+        self.nodes.push(node.to_string());
         self
     }
 
@@ -43,40 +47,44 @@ fn rand_int(max: u32) -> u32 {
     }
 }
 
-fn create_heuristic(graph: &Graph) -> HashMap<String,u32>{
+fn create_heuristic(graph: &Graph, dest: &str) -> HashMap<String,u32>{
     let mut h: HashMap<String,u32> = HashMap::new();
 
     for node in &graph.nodes(){
         h.insert(node.clone(),rand_int(50));
     }
+    h.insert(dest.to_string(),0);
     h
 }
 
-fn greedy_search<'a>(graph: &'a Graph, dest: &'a str) -> Result<String, String> {
+fn greedy_search<'a>(graph: &'a Graph,orig: &'a str, dest: &'a str) -> Result<String, String> {
 
-    let h: HashMap<String,u32> = create_heuristic();
+    let h: HashMap<String,u32> = create_heuristic(graph,dest);
 
-    let mut to_check_queue: Vec<&str> = vec![dest];
+    let mut to_check_queue: Vec<&str> = vec![orig];
 
     let mut visited: Vec<&str> = Vec::new();
 
-    while let Some(node) = to_check_queue.remove(0) {
+    while let node = to_check_queue.remove(0) {
 
-        if visited.contains(node){
+        if visited.contains(&node){
+            if to_check_queue.is_empty(){
+                return Err("Not Found".to_string());
+            }
             continue;
         }
-
+        println!("{}",node);
         visited.push(node);
 
         if dest == node{
-            return Ok("Success");
+            return Ok("Success".to_string());
         }
 
-        to_check_queue.extend(graph.neighbors(node[..]).iter().map(|x| x.as_str()));
-        to_check_queue.sort_by_key(|node| h[String::from(node)]);
+        to_check_queue.extend(graph.neighbors(&node[..]).iter().map(|x| x.as_str()));
+        to_check_queue.sort_by_key(|node| h[*node]);
     }
 
-    Err("Not Found")
+    Err("Not Found".to_string())
 }
 
 fn main() {
@@ -92,7 +100,7 @@ fn main() {
         .add_edge("c", "d")
         .add_edge("d", "e");
 
-    match greedy_search(&graph, "a", "e") {
+    match greedy_search(&graph,"a", "e") {
         Ok(msg) => println!("Yey {}", msg),
         Err(msg) => println!("Error {}", msg),
     }
