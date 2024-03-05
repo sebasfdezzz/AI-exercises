@@ -136,6 +136,56 @@ fn dijkstra_path<'a>(graph: &'a Graph, source: &'a str) -> Result<HashMap<String
     Ok(dict_paths)
 }
 
+fn dijkstra_single_path<'a>(graph: &'a Graph, source: &'a str, dest: &'a str) -> Result<HashMap<String, Vec<String>>, String> {
+    let mut dict_distances: HashMap<&str, u32> = HashMap::new();
+    let mut dict_prev: HashMap<String, String> = HashMap::new();
+
+    dict_distances.insert(source, 0);
+
+    let mut to_check_queue: Vec<String> = vec![source.to_string()];
+    to_check_queue.extend(graph.nodes().iter().map(|s| s.to_string()));
+    to_check_queue.reverse();
+
+    while let Some(node) = min_pop(&mut to_check_queue, &dict_distances) {
+        for child in graph.neighbors(&node[..]) {
+            if !to_check_queue.contains(child) {
+                continue;
+            }
+            let dist = match dict_distances.get(&child[..]) {
+                Some(curr_dist) => {
+                    if dict_distances[&node[..]] + graph.edge_from(&node[..], &child[..]).unwrap_or(&u32::MAX)
+                        < *curr_dist
+                    {
+                        dict_distances[&node[..]] + graph.edge_from(&node[..], &child[..]).unwrap_or(&u32::MAX)
+                    } else {
+                        *curr_dist
+                    }
+                }
+                None => dict_distances[&node[..]] + graph.edge_from(&node[..], &child[..]).unwrap_or(&u32::MAX),
+            };
+            dict_distances.insert(&child[..], dist);
+            dict_prev.insert(child.clone(), node.clone());
+        }
+    }
+
+    let mut dict_paths: HashMap<String, Vec<String>> = HashMap::new();
+    
+        let mut temp_vec: Vec<String> = vec![dest.to_string()];
+
+        let mut current_node = dest.as_str();
+        while let Some(parent) = dict_prev.get(current_node) {
+            temp_vec.push(parent.clone());
+            current_node = parent;
+        }
+
+        temp_vec.reverse();
+
+        dict_paths.insert(node.to_string(), temp_vec);
+    
+
+    Ok(dict_paths)
+}
+
 
 
 fn min_pop(q: &mut Vec<String>, dict: &HashMap<&str, u32>) -> Option<String> {
