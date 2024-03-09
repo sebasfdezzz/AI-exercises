@@ -109,7 +109,7 @@ fn astar<'a>(graph: &'a Graph, source: &'a str, dest: &'a str) -> Result<(Vec<St
                 dict_distances.insert(&child[..], temp_dist);
                 dict_prev.insert(child.clone(), node.clone());
                 dict_predicts.insert(&child[..], (dict_distances[&node[..]] as f32 + 1.3 * h[&child[..]] as f32).floor() as u32);
-                to_check_queue.push(child.clone())
+                to_check_queue.push(child.clone());
             }
         }
     }
