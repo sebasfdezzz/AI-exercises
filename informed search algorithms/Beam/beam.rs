@@ -87,25 +87,25 @@ fn create_heuristic(graph: &Graph, dest: &str) -> HashMap<String,u32>{
 fn beam_search(graph: &Graph, origin: &str, destination: &str, beam_width: usize) -> Result<(Vec<String>, u32), String> {
     let h = create_heuristic(graph, destination);
 
-    let mut beam = vec![(origin.to_string(), vec![origin.to_string()], 0)];
+    let mut beam = vec![(origin.to_string(), vec![origin.to_string()], 0, h[origin])];
 
     while !beam.is_empty() {
         let mut new_beam = Vec::new();
 
-        for (node, path, cost) in beam {
+        for (node, path, cost, pred_cost) in beam {
             if node == destination {
                 return Ok((path, cost));
             }
 
             for neighbor in graph.neighbors(&node) {
                 let new_path = [&path[..], &[neighbor.clone()]].concat();
-                let new_cost = cost + *graph.edge_from(&node, neighbor).expect("edge not found in graph") + h[&neighbor[..]];
+                let new_cost = cost + *graph.edge_from(&node, neighbor).expect("edge not found in graph");
 
-                new_beam.push((neighbor.clone(), new_path, new_cost));
+                new_beam.push((neighbor.clone(), new_path, new_cost,new_cost + h[&neighbor[..]]));
             }
         }
 
-        new_beam.sort_by_key(|&(_, _, cost)| cost);
+        new_beam.sort_by_key(|&(_, _, _, predict_cost)| predict_cost);
         beam = new_beam.into_iter().take(beam_width).collect();
     }
 

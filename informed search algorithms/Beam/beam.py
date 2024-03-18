@@ -51,6 +51,7 @@ def beam_search(origin, destination, beam_width=3):
     h = create_heuristic_table(destination)
 
     beam = [(origin, [origin], 0)]
+    visited = [origin]
 
     while beam:
         new_beam = []
