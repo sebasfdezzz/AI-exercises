@@ -84,49 +84,31 @@ fn create_heuristic(graph: &Graph, dest: &str) -> HashMap<String,u32>{
     h
 }
 
-fn beam_search<'a>(graph: &'a Graph, source: &'a str, dest: &'a str, beam_width: u32) -> Result<(Vec<String>, u32), String>  {
+fn beam_search(graph: &Graph, origin: &str, destination: &str, beam_width: usize) -> Result<(Vec<String>, u32), String> {
+    let h = create_heuristic(graph, destination);
 
-    let h = create_heuristic(graph,dest);
+    let mut beam = vec![(origin.to_string(), vec![origin.to_string()], 0)];
 
-    let mut dict_distances: HashMap<&str, u32> = HashMap::new();
-    let mut dict_prev: HashMap<String, String> = HashMap::new();
-    let mut dict_predicts: HashMap<&str, u32> = HashMap::new();
+    while !beam.is_empty() {
+        let mut new_beam = Vec::new();
 
-    dict_distances.insert(source, 0);
-    dict_predicts.insert(source, (0 as f32 + 1.3 * h[source] as f32).floor() as u32);
-
-    let mut to_check_queue: Vec<String> = vec![source.to_string()];
-
-    while let Some(node) = min_pop(&mut to_check_queue, &dict_predicts) {
-
-        if &node[..] == dest{
-            let mut temp_vec: Vec<String> = vec![dest.to_string()];
-
-            let mut current_node = dest.to_string();
-            while let Some(parent) = dict_prev.get(&current_node) {
-                temp_vec.push(parent.clone());
-                current_node = parent.to_string();
+        for (node, path, cost) in beam {
+            if node == destination {
+                return Ok((path, cost));
             }
-    
-            temp_vec.reverse();
-    
-            return Ok((temp_vec, dict_distances[dest]));
-        }
 
-        println!("Current neighbors of {} are {:?}",node,graph.neighbors(&node[..]));
+            for neighbor in graph.neighbors(&node) {
+                let new_path = [&path[..], &[neighbor.clone()]].concat();
+                let new_cost = cost + *graph.edge_from(&node, neighbor).expect("edge not found in graph") + h[&neighbor[..]];
 
-        for child in graph.neighbors(&node[..]) {
-            println!("Calculating for nodes {} and {}",child,node);
-            let temp_dist = dict_distances[&node[..]] + graph.edge_from(&node[..], &child[..]).expect("edge not found in graph!");
-            if temp_dist < *dict_distances.get(&child[..]).unwrap_or(&u32::MAX){
-                dict_distances.insert(&child[..], temp_dist);
-                dict_prev.insert(child.clone(), node.clone());
-                dict_predicts.insert(&child[..], (dict_distances[&node[..]] as f32 + 1.3 * h[&child[..]] as f32).floor() as u32);
-                to_check_queue.push(child.clone());
+                new_beam.push((neighbor.clone(), new_path, new_cost));
             }
         }
+
+        new_beam.sort_by_key(|&(_, _, cost)| cost);
+        beam = new_beam.into_iter().take(beam_width).collect();
     }
-    
+
     Err("Path not found".to_string())
 }
 
@@ -160,7 +142,7 @@ fn main(){
     .add_w_edge("e", "i", 5)
     .add_w_edge("a", "j", 7);
 
-    match astar(&graph, "a","i") {
+    match beam_search(&graph, "a","i",3) {
         Ok(path_cost) => println!("{:?}", path_cost),
         Err(msg) => println!("{}", msg),
     }
