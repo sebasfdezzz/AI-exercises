@@ -1,6 +1,6 @@
 use std::collections::HashMap;
 use std::time::SystemTime;
-
+use std::collections::HashSet;
 
 struct Graph {
     nodes: Vec<String>,
@@ -84,8 +84,11 @@ fn create_heuristic(graph: &Graph, dest: &str) -> HashMap<String,u32>{
     h
 }
 
+
+
 fn beam_search(graph: &Graph, origin: &str, destination: &str, beam_width: usize) -> Result<(Vec<String>, u32), String> {
     let h = create_heuristic(graph, destination);
+    let mut visited = HashSet::new();
 
     let mut beam = vec![(origin.to_string(), vec![origin.to_string()], 0, h[origin])];
 
@@ -97,11 +100,15 @@ fn beam_search(graph: &Graph, origin: &str, destination: &str, beam_width: usize
                 return Ok((path, cost));
             }
 
-            for neighbor in graph.neighbors(&node) {
-                let new_path = [&path[..], &[neighbor.clone()]].concat();
-                let new_cost = cost + *graph.edge_from(&node, neighbor).expect("edge not found in graph");
+            visited.insert(node.clone());
 
-                new_beam.push((neighbor.clone(), new_path, new_cost,new_cost + h[&neighbor[..]]));
+            for neighbor in graph.neighbors(&node) {
+                if !visited.contains(neighbor) {
+                    let new_path = [&path[..], &[neighbor.clone()]].concat();
+                    let new_cost = cost + *graph.edge_from(&node, neighbor).expect("edge not found in graph");
+
+                    new_beam.push((neighbor.clone(), new_path, new_cost, new_cost + h[&neighbor[..]]));
+                }
             }
         }
 
@@ -111,6 +118,7 @@ fn beam_search(graph: &Graph, origin: &str, destination: &str, beam_width: usize
 
     Err("Path not found".to_string())
 }
+
 
 fn main(){
     let graph = Graph::new()
