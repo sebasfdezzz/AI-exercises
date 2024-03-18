@@ -43,13 +43,23 @@ impl Graph {
         self.edges
             .iter()
             .filter(|(n1, n2)| (n1 == node && n1 != n2) || (n2 == node && n1 != n2))
-            .map(|(_, n2)| n2)
+            .flat_map(|(n1, n2)| {
+                if n1 == node {
+                    Some(n2)
+                } else {
+                    Some(n1)
+                }
+            })
             .collect()
     }
 
     fn edge_from(&self, from: &str, to: &str) -> Option<&u32> {
-        self.weights.get(&(from.to_string(), to.to_string()))
+        match self.weights.get(&(from.to_string(), to.to_string())) {
+            Some(weight) => Some(weight),
+            None => self.weights.get(&(to.to_string(), from.to_string())),
+        }
     }
+    
 
     fn nodes(&self) -> Vec<String> {
         self.nodes.clone()
