@@ -70,6 +70,7 @@ fn create_heuristic(graph: &Graph, dest: &str) -> HashMap<String,u32>{
         h.insert(node.clone(),rand_int(20,50));
     }
     h.insert(dest.to_string(),0);
+    
     h
 }
 
@@ -102,9 +103,11 @@ fn astar<'a>(graph: &'a Graph, source: &'a str, dest: &'a str) -> Result<(Vec<St
             return Ok((temp_vec, dict_distances[dest]));
         }
 
+        println!("Current neighbors of {} are {:?}",node,graph.neighbors(&node[..]));
+
         for child in graph.neighbors(&node[..]) {
             println!("Calculating for nodes {} and {}",child,node);
-            let temp_dist = dict_distances[&node[..]] + graph.edge_from(&node[..], &child[..]).unwrap_or(&u32::MAX);
+            let temp_dist = dict_distances[&node[..]] + graph.edge_from(&node[..], &child[..]).expect("edge not found in graph!");
             if temp_dist < *dict_distances.get(&child[..]).unwrap_or(&u32::MAX){
                 dict_distances.insert(&child[..], temp_dist);
                 dict_prev.insert(child.clone(), node.clone());
@@ -138,10 +141,14 @@ fn min_pop(q: &mut Vec<String>, dict: &HashMap<&str, u32>) -> Option<String> {
     
     if let Some(index) = q.iter().position(|x| x == &min_node) {
         q.remove(index);
+        println!("popped {}",min_node);
         Some(min_node)
     } else {
+        println!("popped nothing");
         None
     }
+
+    
 }
 
 

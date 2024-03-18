@@ -170,17 +170,17 @@ fn dijkstra_single_path<'a>(graph: &'a Graph, source: &'a str, dest: &'a str) ->
 
     let mut dict_paths: HashMap<String, Vec<String>> = HashMap::new();
     
-        let mut temp_vec: Vec<String> = vec![dest.to_string()];
+    let mut temp_vec: Vec<String> = vec![dest.to_string()];
 
-        let mut current_node = dest.as_str();
-        while let Some(parent) = dict_prev.get(current_node) {
-            temp_vec.push(parent.clone());
-            current_node = parent;
-        }
+    let mut current_node = dest;
+    while let Some(parent) = dict_prev.get(current_node) {
+        temp_vec.push(parent.clone());
+        current_node = parent;
+    }
 
-        temp_vec.reverse();
+    temp_vec.reverse();
 
-        dict_paths.insert(node.to_string(), temp_vec);
+    dict_paths.insert(source.to_string(), temp_vec);
     
 
     Ok(dict_paths)
