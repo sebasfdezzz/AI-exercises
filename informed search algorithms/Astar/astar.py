@@ -1,5 +1,6 @@
 import networkx as nx
 import matplotlib.pyplot as plt
+import random
 
 G = nx.Graph() #DiGrpah es direccionada
 G.add_nodes_from(['Cozumel','Ciudad del Carmen','Angel Albino Corzo','Minatitlan','Veracruz','Acapulco','Puebla','CDMX','Morelia','Uruapan','San Luis Potosi','Tampico','Piedras Negras','Culiacan','Abraham Gonzalez','Nogales','Guaymas','Loreto','Manuel Marquez de Leon','Los Cabos'])
